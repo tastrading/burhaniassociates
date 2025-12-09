@@ -88,25 +88,16 @@ export default async function ProductDetailPage({ params }: Props) {
         )
     }
 
-    // Map data for Client Component
-    const displayProduct = {
-        name: product.name,
-        slug: product.id,
-        description: product.description,
-        imageUrl: product.images[0]?.url || null,
-        featured: false,
-        inStock: (product.inventory?.stock || 0) > 0,
-        brand: product.brand ? { id: product.brand.id, name: product.brand.name, slug: product.brand.name.toLowerCase().replace(/\s+/g, '-') } : null,
-        category: product.category ? { id: product.category.id, name: product.category.name, slug: product.category.name.toLowerCase().replace(/\s+/g, '-') } : null,
-    }
+    const displayProduct = { name: product.name }
 
-    // Server Side Layout with Client Component for Interactivity
     return (
-        <div className="min-h-screen bg-background pb-20">
-            {/* Breadcrumb / Header */}
-            <div className="bg-secondary border-b border-border py-8">
-                <div className="container mx-auto px-4 lg:px-8">
-                    <div className="flex items-center gap-2 text-sm font-sans text-muted-foreground uppercase tracking-wide">
+        <div className="min-h-screen bg-slate-50 pb-20">
+            {/* Breadcrumb Strip */}
+            <div className="bg-white border-b border-border shadow-sm">
+                <div className="container mx-auto px-4 lg:px-8 py-4">
+                    <div className="flex items-center gap-2 text-xs lg:text-sm font-bold text-muted-foreground uppercase tracking-widest overflow-x-auto whitespace-nowrap">
+                        <Link href="/" className="hover:text-primary transition-colors">Home</Link>
+                        <span>/</span>
                         <Link href="/products" className="hover:text-primary transition-colors">Products</Link>
                         <span>/</span>
                         {product.category && (
@@ -117,65 +108,93 @@ export default async function ProductDetailPage({ params }: Props) {
                                 <span>/</span>
                             </>
                         )}
-                        <span className="text-primary font-bold truncated">{product.name}</span>
+                        <span className="text-primary">{product.name}</span>
                     </div>
                 </div>
             </div>
 
             <div className="container mx-auto px-4 lg:px-8 py-12">
-                <div className="grid lg:grid-cols-2 gap-16">
-                    {/* Image Section - Sticky */}
-                    <div className="relative h-[500px] lg:h-[600px] bg-white border border-border flex items-center justify-center p-12">
-                        {displayProduct.imageUrl ? (
-                            <Image
-                                src={displayProduct.imageUrl}
-                                alt={product.name}
-                                fill
-                                className="object-contain"
-                            />
-                        ) : (
-                            <div className="text-muted-foreground/30">
-                                <svg className="w-24 h-24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg>
-                            </div>
-                        )}
-                        {/* Watermark or corner accents could go here */}
+                <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+                    {/* Left Column: Image Area */}
+                    <div className="relative bg-white border border-border p-8 lg:p-16 flex items-center justify-center shadow-lg group">
+                        {/* Decorative Corner Accents */}
+                        <div className="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-primary" />
+                        <div className="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-accent" />
+
+                        <div className="relative w-full aspect-square max-w-[500px]">
+                            {product.images[0]?.url ? (
+                                <Image
+                                    src={product.images[0].url}
+                                    alt={product.name}
+                                    fill
+                                    className="object-contain transition-transform duration-500 group-hover:scale-105"
+                                    priority
+                                />
+                            ) : (
+                                <div className="flex items-center justify-center h-full w-full bg-secondary/10">
+                                    <span className="text-muted-foreground font-bold uppercase tracking-widest">No Image Available</span>
+                                </div>
+                            )}
+                        </div>
                     </div>
 
-                    {/* Details Section */}
-                    <div className="space-y-8">
-                        <div>
+                    {/* Right Column: Information */}
+                    <div className="flex flex-col h-full">
+                        {/* Brand Badge */}
+                        <div className="mb-6">
                             {product.brand && (
-                                <Link href={`/products?brand=${product.brand.name.toLowerCase().replace(/\s+/g, '-')}`} className="inline-block px-3 py-1 bg-secondary text-primary text-xs font-bold uppercase tracking-widest mb-4">
-                                    {product.brand.name}
+                                <Link
+                                    href={`/products?brand=${product.brand.name.toLowerCase().replace(/\s+/g, '-')}`}
+                                    className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white text-xs font-bold uppercase tracking-widest hover:bg-accent transition-colors shadow-md"
+                                >
+                                    <span>Authorized {product.brand.name} Dealer</span>
+                                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                    </svg>
                                 </Link>
                             )}
-                            <h1 className="text-4xl lg:text-5xl font-heading font-bold text-primary uppercase leading-none mb-6">
-                                {product.name}
-                            </h1>
-
-                            {/* Stock Status */}
-                            <div className="flex items-center gap-3 mb-6">
-                                <span className={`w-3 h-3 rounded-full ${displayProduct.inStock ? 'bg-green-500' : 'bg-red-500'}`} />
-                                <span className="font-sans font-medium text-muted-foreground">
-                                    {displayProduct.inStock ? 'In Stock - Ready to Dispatch' : 'Check Availability'}
-                                </span>
-                            </div>
                         </div>
 
-                        {/* Specs / Description Block */}
-                        <div className="bg-secondary/20 p-8 border-l-4 border-primary">
-                            <h3 className="font-heading font-bold text-xl text-primary mb-4 uppercase">Description</h3>
+                        {/* Title */}
+                        <h1 className="text-4xl lg:text-5xl font-heading font-bold text-primary mb-6 leading-tight uppercase">
+                            {product.name}
+                        </h1>
+
+                        {/* Description */}
+                        <div className="bg-white p-8 border-l-4 border-accent shadow-sm mb-8">
+                            <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-widest mb-4">Technical Description</h3>
                             <div
-                                className="prose prose-slate max-w-none text-muted-foreground font-sans"
-                                dangerouslySetInnerHTML={{ __html: product.description || '<p>No description provided.</p>' }}
+                                className="prose prose-slate max-w-none text-secondary-foreground/80 font-sans leading-relaxed"
+                                dangerouslySetInnerHTML={{ __html: product.description || '<p>Contact us for detailed technical specifications.</p>' }}
                             />
                         </div>
 
-                        {/* CTA Section - Handled by Client Component */}
-                        <div className="pt-8 border-t border-border">
-                            <ProductDetailClient product={displayProduct} />
+                        {/* Spacer */}
+                        <div className="flex-grow" />
+
+                        {/* Interaction Area */}
+                        <div className="mt-8 space-y-8">
+                            {/* Actions */}
+                            <div className="bg-white p-6 border border-border shadow-md">
+                                <h3 className="text-sm font-bold text-primary uppercase tracking-widest mb-4 border-b border-border pb-2">Request Quote</h3>
+                                <ProductDetailClient product={displayProduct} />
+                            </div>
+
+                            {/* Trust Indicators */}
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="flex items-center gap-3 p-4 bg-secondary/10 border border-border">
+                                    <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    <span className="text-xs font-bold text-primary uppercase tracking-wide">100% Genuine</span>
+                                </div>
+                                <div className="flex items-center gap-3 p-4 bg-secondary/10 border border-border">
+                                    <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                    </svg>
+                                    <span className="text-xs font-bold text-primary uppercase tracking-wide">Fast Delivery</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
