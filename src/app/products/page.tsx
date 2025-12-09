@@ -70,25 +70,25 @@ export default async function ProductsPage({ searchParams }: PageProps) {
     if (params.brand) {
         const brandSlug = params.brand.toLowerCase()
         displayProducts = displayProducts.filter(
-            (p) => p.brand?.name.toLowerCase().replace(/\s+/g, '-') === brandSlug
+            (p: any) => p.brand?.name.toLowerCase().replace(/\s+/g, '-') === brandSlug
         )
     }
     if (params.category) {
         const categorySlug = params.category.toLowerCase()
         displayProducts = displayProducts.filter(
-            (p) => p.category?.name.toLowerCase().replace(/\s+/g, '-') === categorySlug
+            (p: any) => p.category?.name.toLowerCase().replace(/\s+/g, '-') === categorySlug
         )
     }
     if (params.search) {
         const searchLower = params.search.toLowerCase()
-        displayProducts = displayProducts.filter((p) =>
+        displayProducts = displayProducts.filter((p: any) =>
             p.name.toLowerCase().includes(searchLower) ||
             p.description?.toLowerCase().includes(searchLower)
         )
     }
 
     // Map to Props
-    const formattedProducts: ProductType[] = displayProducts.map(p => ({
+    const formattedProducts: ProductType[] = displayProducts.map((p: any) => ({
         id: p.id,
         name: p.name,
         slug: p.id,
