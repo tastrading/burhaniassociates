@@ -3,7 +3,9 @@ import { Oswald, Roboto } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import NextTopLoader from "nextjs-toploader";
 
+export const preferredRegion = 'sin1'; // Singapore region for lower latency in India/Asia
 const oswald = Oswald({
   variable: "--font-oswald",
   subsets: ["latin"],
@@ -58,6 +60,10 @@ export const metadata: Metadata = {
   },
 };
 
+
+
+// ... (previous imports and fonts remain same)
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -68,6 +74,17 @@ export default function RootLayout({
       <body
         className={`${oswald.variable} ${roboto.variable} antialiased font-sans`}
       >
+        <NextTopLoader
+          color="#FE5C00" // Accent color (Orange)
+          initialPosition={0.08}
+          crawlSpeed={200}
+          height={3}
+          crawl={true}
+          showSpinner={false}
+          easing="ease"
+          speed={200}
+          shadow="0 0 10px #FE5C00,0 0 5px #FE5C00"
+        />
         <Header />
         <main className="min-h-screen bg-slate-50 pt-20">
           {children}
