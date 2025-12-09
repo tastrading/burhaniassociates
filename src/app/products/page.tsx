@@ -144,7 +144,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
                                         All Brands
                                     </Link>
                                 </li>
-                                {brands.map(b => {
+                                {brands.map((b: any) => {
                                     const slug = b.name.toLowerCase().replace(/\s+/g, '-')
                                     const isActive = params.brand === slug
                                     return (
@@ -174,7 +174,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
                                         All Categories
                                     </Link>
                                 </li>
-                                {categories.map(c => {
+                                {categories.map((c: any) => {
                                     const slug = c.name.toLowerCase().replace(/\s+/g, '-')
                                     const isActive = params.category === slug
                                     return (
