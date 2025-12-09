@@ -31,7 +31,7 @@ async function getProducts() {
         return products
     } catch (error) {
         console.error('Error fetching products:', error)
-        return []
+        return [] as any[]
     }
 }
 
@@ -39,7 +39,7 @@ async function getBrands() {
     try {
         return await prisma.brand.findMany({ select: { id: true, name: true } })
     } catch {
-        return []
+        return [] as { id: string; name: string }[]
     }
 }
 
@@ -47,7 +47,7 @@ async function getCategories() {
     try {
         return await prisma.category.findMany({ select: { id: true, name: true } })
     } catch {
-        return []
+        return [] as { id: string; name: string }[]
     }
 }
 

@@ -10,7 +10,7 @@ async function getBrands() {
         })
         return brands
     } catch {
-        return []
+        return [] as { id: string; name: string; _count: { products: number } }[]
     }
 }
 
