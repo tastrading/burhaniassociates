@@ -13,7 +13,7 @@ async function getFeaturedProducts() {
     })
     return products
   } catch {
-    return []
+    return [] as any[]
   }
 }
 

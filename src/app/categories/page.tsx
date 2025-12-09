@@ -3,7 +3,13 @@ import Link from 'next/link'
 import prisma from '@/lib/prisma'
 import CategoryCard from '@/components/CategoryCard'
 
-async function getCategories() {
+interface Category {
+    id: string
+    name: string
+    _count: { products: number }
+}
+
+async function getCategories(): Promise<Category[]> {
     try {
         // Fetch all categories with product count
         const categories = await prisma.category.findMany({
@@ -11,7 +17,7 @@ async function getCategories() {
         })
         return categories
     } catch {
-        return [] as { id: string; name: string; _count: { products: number } }[]
+        return []
     }
 }
 
